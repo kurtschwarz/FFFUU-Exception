@@ -1,0 +1,41 @@
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;vertical-align:baseline;background:transparent}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outline:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html{font-size:62.5%}
+body{color:#3a3a3a;font:normal 1.6em Veranda,Arial,Helvetica,Helvetica;line-height:1.6em;text-align:center}
+
+.i{font-style:italic}
+.b{font-weight:bold}
+
+h1{font-size:2.8em!important;text-align:center} /* 24 px */
+h2{font-size:1.8em!important} /* 22 px */
+h3{font-size:1.6em!important} /* 20 px */
+h4{font-size:1.4em!important} /* 18 px */
+h5{font-size:1.2em!important} /* 16 px */
+h6{font-size:1em!important} /* 14 px */
+h1,h2,h3,h4,h5,h6{font:normal 1em Georgia,"Nimbus Roman No9 L",Serif}
+
+.wrap{position:relative;padding:50px;text-align:left;width:960px;margin:0 auto;z-index:500}
+
+.ffffuuu{position:fixed;z-index:400;bottom:0px;right:30px;width:349px;height:366px;background:url("../../img/exception/FFFUU.jpg")}
+
+.stack .sub{padding:0px 0px 0px 20px}
+
+
+.stack .trace{border-bottom:solid 1px #cdcdcd;border-left:solid 1px #cdcdcd;border-right:solid 1px #cdcdcd}
+.stack .trace.first{border-top:solid 1px #cdcdcd}
+.stack .trace .title{padding:5px 8px;display:block;border-bottom:solid 1px #cdcdcd}
+
+
+.codeBlock{font: 1em 'Courier New', Courier, Fixed, monospace;padding:0}
+.codeBlock .line{position:relative;display:block}
+.codeBlock .line:after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0}
+.codeBlock .line .num{position:absolute;padding:3px;width:49px;text-align:right}
+.codeBlock .line .code{border-left:solid 55px #f0f0f0}
+.codeBlock .line .code .border{padding:3px;border-left: solid 2px #cdcdcd}
+.codeBlock .hl{color:#ff0000;background:#ffeded}
+.codeBlock .hl .num{color:#6C0003}
+.codeBlock .hl .code{border-left-color:#FFCECF}
+.codeBlock .hl .code .border{border-left-color:#f59497}
+
+.plain{font: 1em 'Courier New', Courier, Fixed, monospace;padding:8px}
+
