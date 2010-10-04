@@ -83,10 +83,10 @@ class FFFUUUException
         for($c=0;$c<$b;++$c)
         {
             $line = &$lines[$a[$c]];
-            $line = preg_replace('/^\s/s', '&nbsp;', preg_replace('/\s\s/s', '&nbsp;&nbsp;', htmlspecialchars($line)));
+            //$line = preg_replace('/^\s/s', '&nbsp;', preg_replace('/\s\s/s', '&nbsp;&nbsp;', htmlspecialchars($line)));
             $html .= '<li class="line';
             if($a[$c] == $offset) $html .= ' hl';
-            $html .= '"><div class="num">'.$a[$c].'.</div><div class="code"><div class="border">'.$line.'</div></div></li>';
+            $html .= '"><div class="num">'.$a[$c].'.</div><div class="code"><div class="border">'.$this->convertPHPHighlighting(str_replace('<br />', '', str_replace('?&gt;', '', str_replace('&lt;?php', '', highlight_string('<?php '.$line.' ?>', true))))).'</div></div></li>';
         }
         
         return $html;
@@ -113,6 +113,24 @@ class FFFUUUException
         }
         
         return $html.' )';
+    }
+
+    private final function convertPHPHighlighting($str)
+    {
+        $defaults = new \stdClass;
+        $defaults->string = ini_get('highlight.string');
+        $defaults->comment = ini_get('highlight.comment');
+        $defaults->keyword = ini_get('highlight.keyword');
+        $defaults->default = ini_get('highlight.default');
+        $defaults->html = ini_get('highlight.html');
+        if(empty($defaults->string)) $defaults->string = '#DD0000';
+        if(empty($defaults->comment)) $defaults->comment = '#FF8800';
+        if(empty($defaults->keyword)) $defaults->keyword = '#007700';
+        if(empty($defaults->default)) $defaults->default = '#0000BB';
+        if(empty($defaults->html)) $defaults->html = '#000000';
+        
+        $str = str_replace(array('style="color: '.$defaults->string.'"', 'style="color: '.$defaults->comment.'"', 'style="color: '.$defaults->keyword.'"', 'style="color: '.$defaults->default.'"', 'style="color: '.$defaults->html.'"'), array('class="php-string"', 'class="php-comment"', 'class="php-keyword"', 'class="php-default"', 'class="php-html"'), $str);
+        return $str;
     }
 }
 

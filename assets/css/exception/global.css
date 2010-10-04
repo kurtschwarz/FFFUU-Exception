@@ -38,3 +38,9 @@ h1,h2,h3,h4,h5,h6{font:normal 1em Georgia,"Nimbus Roman No9 L",Serif}
 
 .plain{font: 1em 'Courier New', Courier, Fixed, monospace;padding:8px}
 
+
+.php-string{color:#DD0000}
+.php-comment{color:#FF8800}
+.php-keyword{color:#007700}
+.php-default{color:#0000BB}
+.php-html{color:#000}
