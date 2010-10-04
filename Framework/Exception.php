@@ -7,6 +7,9 @@ class FFFUUUException
     
     private $exception = false;
     private $stack = false;
+    private $fancyHTML = '';
+    private $level = 0;
+    private $shortType = array('boolean' => 'bool', 'integer' => 'int', 'string' => 'string', 'double' => 'double', 'array' => 'array', 'object' => 'object', 'resource' => 'resource', 'NULL' => 'null', 'unknown type' => 'unknown');
     
     public function __construct($exception)
     {
@@ -16,7 +19,11 @@ class FFFUUUException
     public function getTraceAsFancyHTML()
     {
         $this->stack = $this->exception->getTrace();
-        return $this->buildTrace('', 0);
+        $this->fancyHTML = '';
+        $this->level = 0;
+
+        $this->buildTrace();
+        return $this->fancyHTML;
     }
     
     public function getTraceAsText()
@@ -31,40 +38,34 @@ class FFFUUUException
             $func = '';
             $trace = &$stack[$a[$c]];
             
-            if(!empty($line['class'])) $func .= $line['class'].$line['type'];
-            $func .= $line['function'];
-            $text .= '&nbsp;&nbsp;at '.$func.' in '.$line['file'].' on '.$line['line'].'<br />'."\r\n";
+            if(!empty($trace['class'])) $func .= $trace['class'].$trace['type'];
+            $func .= $trace['function'];
+            $text .= '&nbsp;&nbsp;at '.$func.' in '.$trace['file'].' on '.$trace['line'].'<br />'."\r\n";
         }
         
         $text .= '<br />'."\r\n".str_replace("\n", '<br />'."\r\n", $this->exception->getTraceAsString());
         return $text;
     }
 
-    private function buildTrace($html, $level = 0)
+    private function buildTrace()
     {
         if(!empty($this->stack))
         {
-            $html = $html.'<li><div class="trace';
-            if($level == 0) $html .= ' first';
-            $html .= '"><span class="title">#'.$level.'. In <span class="b">'.$this->stack[0]['file'].'</span> around line <span class="b">'.$this->stack[0]['line'].'</span>.</span><ul class="codeBlock">'.$this->getFileSource($this->stack[0]['file'], $this->stack[0]['line']).'</ul></div><ul class="sub">';
-            ++$level;
+            $this->fancyHTML .= '<li><div class="trace';
+            if($this->level == 0) $this->fancyHTML .= ' first';
+            $this->fancyHTML .= '"><span class="title">#'.$this->level.'. In <span class="b">'.$this->stack[0]['file'].'</span> around line <span class="b">'.$this->stack[0]['line'].'</span>.<br /><span class="code">'.$this->makeNiceFuncString().'</span>.</span><ul class="codeBlock">'.$this->getFileSource($this->stack[0]['file'], $this->stack[0]['line']).'</ul></div><ul class="sub">';
+            ++$this->level;
             array_shift($this->stack);
-            $this->buildTrace($html, $level);
+            $this->buildTrace();
         }
-        else
-        {
-            $html = $html;
-            for($level;$level>0;--$level) $html .= '</ul></li>';
-        }
-
-        return $html;
+        else for($this->level;$this->level>0;--$this->level) $this->fancyHTML .= '</ul></li>';
     }
     
     private function getFileSource($file, $offset)
     {
         $fp = fopen($file, 'r');
         $html = '';
-        
+        $lines[] = '';
         do
         {
            $buffer = fgets($fp, 4096);
@@ -72,8 +73,7 @@ class FFFUUUException
         }
         while(!feof($fp));
         fclose($fp);
-        array_unshift($lines, '');
-
+        
         $start = $offset-$this->srcLines;
         if($start < 0) $start = 0;
 
@@ -90,6 +90,29 @@ class FFFUUUException
         }
         
         return $html;
+    }
+
+    private final function makeNiceFuncString()
+    {
+        $html = '';
+        if(!empty($this->stack[0]['class'])) $html .= $this->stack[0]['class'].$this->stack[0]['type'];
+        $html .= $this->stack[0]['function'].'( ';
+        
+        $a = array_keys($this->stack[0]['args']);
+        $b = sizeOf($a);
+        for($c=0;$c<$b;++$c)
+        {
+            $arg = &$this->stack[0]['args'][$a[$c]];
+            $type = $this->shortType[gettype($arg)];
+            
+            $html .= $type.' ';
+            if($type == 'string') $html .= '\'<span class="i">'.$arg.'</span>\'';
+            else $html .= '<span class="i">'.$arg.'</span>';
+            
+            if($c < ($b-1)) $html .= ', ';
+        }
+        
+        return $html.' )';
     }
 }
 

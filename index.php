@@ -3,12 +3,30 @@ require_once 'Framework/Framework.php';
 
 try
 {
-    function test()
+    class StackClass
     {
-        throw new Exception(';(');
+        public function __construct($a, $b, $c)
+        {
+            $this->stack($a, $b, $c, time()+time());
+        }
+        
+        private function stack($a, $b, $c, $d)
+        {
+            $this->trace(':)');
+        }
+
+        private function trace($a)
+        {
+            $this->ho(':(');
+        }
+
+        private function ho($d)
+        {
+            throw new Exception('Something broke!');
+        }
     }
-    // Logic here, with errors and exceptions!
-    test();
+
+    $StackClass = new StackClass(time(), mt_rand(0, 9000), mt_rand(0, 9000));
 }
 catch(Exception $e)
 {

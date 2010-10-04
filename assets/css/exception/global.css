@@ -25,8 +25,7 @@ h1,h2,h3,h4,h5,h6{font:normal 1em Georgia,"Nimbus Roman No9 L",Serif}
 .stack .trace.first{border-top:solid 1px #cdcdcd}
 .stack .trace .title{padding:5px 8px;display:block;border-bottom:solid 1px #cdcdcd}
 
-
-.codeBlock{font: 1em 'Courier New', Courier, Fixed, monospace;padding:0}
+.codeBlock,.code{font: 1em 'Courier New', Courier, Fixed, monospace;padding:0}
 .codeBlock .line{position:relative;display:block}
 .codeBlock .line:after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0}
 .codeBlock .line .num{position:absolute;padding:3px;width:49px;text-align:right}
