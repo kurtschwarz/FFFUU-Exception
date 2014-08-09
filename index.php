@@ -5,7 +5,7 @@ try
 {
     class StackClass
     {
-        public function __construct($a, $b, $c)
+        public function __construct($a, $b, $c, $d)
         {
             $this->stack($a, $b, $c, time()+time());
         }
@@ -26,7 +26,17 @@ try
         }
     }
 
-    $StackClass = new StackClass(time(), mt_rand(0, 9000), mt_rand(0, 9000));
+    class Foo
+    {
+        public function __construct($a)
+        {}
+    }
+
+    function runme($data) {
+        new StackClass(time(), mt_rand(0, 9000), mt_rand(0, 9000), $data);
+    }
+
+    call_user_func_array('runme', array(new Foo('test')));
 }
 catch(Exception $e)
 {

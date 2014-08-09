@@ -40,6 +40,10 @@ class FFFUUUException
             
             if(!empty($trace['class'])) $func .= $trace['class'].$trace['type'];
             $func .= $trace['function'];
+
+            $file = isset($trace['file'])?$trace['file']:'?';
+            $line = isset($trace['line'])?$trace['line']:'?';
+            
             $text .= '&nbsp;&nbsp;at '.$func.' in '.$trace['file'].' on '.$trace['line'].'<br />'."\r\n";
         }
         
@@ -51,9 +55,12 @@ class FFFUUUException
     {
         if(!empty($this->stack))
         {
+            $file = isset($this->stack[0]['file'])?$this->stack[0]['file']:'?';
+            $line = isset($this->stack[0]['line'])?$this->stack[0]['line']:'?';
+
             $this->fancyHTML .= '<li><div class="trace';
             if($this->level == 0) $this->fancyHTML .= ' first';
-            $this->fancyHTML .= '"><span class="title">#'.$this->level.'. In <span class="b">'.$this->stack[0]['file'].'</span> around line <span class="b">'.$this->stack[0]['line'].'</span>.<br /><span class="code">'.$this->makeNiceFuncString().'</span>.</span><ul class="codeBlock">'.$this->getFileSource($this->stack[0]['file'], $this->stack[0]['line']).'</ul></div><ul class="sub">';
+            $this->fancyHTML .= '"><span class="title">#'.$this->level.'. In <span class="b">'.$file.'</span> around line <span class="b">'.$line.'</span>.<br /><span class="code">'.$this->makeNiceFuncString().'</span>.</span><ul class="codeBlock">'.$this->getFileSource($file, $line).'</ul></div><ul class="sub">';
             ++$this->level;
             array_shift($this->stack);
             $this->buildTrace();
@@ -63,6 +70,10 @@ class FFFUUUException
     
     private function getFileSource($file, $offset)
     {
+        if(empty($file) || !file_exists($file)) {
+            return '<li class="line"><em>No preview avaiable.</em></li>';
+        }
+
         $fp = fopen($file, 'r');
         $html = '';
         $lines[] = '';
@@ -104,6 +115,14 @@ class FFFUUUException
         {
             $arg = &$this->stack[0]['args'][$a[$c]];
             $type = $this->shortType[gettype($arg)];
+
+            if(is_object($arg)) {
+                $arg = get_class($arg);
+            }
+            
+            if(is_object($type)) {
+                $type = get_class($type);
+            }
             
             $html .= $type.' ';
             if($type == 'string') $html .= '\'<span class="i">'.$arg.'</span>\'';
